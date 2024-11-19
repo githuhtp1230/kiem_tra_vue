@@ -44,7 +44,7 @@ const modelStudent = ref({
 const isEditing = ref(false);
 
 const add = () => {
-  nhanViens.value.push({ ...modelStudent.value });
+  nhanViens.value.unshift({ ...modelStudent.value });
   resetForm();
 };
 
