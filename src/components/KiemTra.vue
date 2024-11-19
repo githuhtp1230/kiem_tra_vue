@@ -23,8 +23,6 @@ const modelStudent = ref({
 
 const isEditing = ref(false);
 let searchQuery = ref("");
-const currentPage = ref(1);
-const itemsPerPage = ref(5); // Số lượng nhân viên hiển thị mỗi trang
 
 const add = () => {
   nhanViens.value.unshift({ ...modelStudent.value });
@@ -63,7 +61,6 @@ const resetForm = () => {
   isEditing.value = false;
 };
 
-// Lọc danh sách nhân viên dựa trên từ khóa tìm kiếm
 const filteredNhanViens = computed(() => {
   return nhanViens.value.filter((nv) => {
     return (
@@ -73,39 +70,12 @@ const filteredNhanViens = computed(() => {
     );
   });
 });
-
-// Lấy danh sách nhân viên của trang hiện tại
-const paginatedNhanViens = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
-  const endIndex = startIndex + itemsPerPage.value;
-  return filteredNhanViens.value.slice(startIndex, endIndex);
-});
-
-// Tính tổng số trang
-const totalPages = computed(() => {
-  return Math.ceil(filteredNhanViens.value.length / itemsPerPage.value);
-});
-
-// Chuyển đến trang tiếp theo
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-// Chuyển đến trang trước
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
 </script>
 
 <template>
   <div class="container mt-5">
     <h2 class="text-center mb-4">Quản Lý Nhân Viên</h2>
 
-    <!-- Tìm kiếm -->
     <div class="mb-4">
       <input
         type="text"
@@ -192,7 +162,7 @@ const prevPage = () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="nv in paginatedNhanViens" :key="nv.id">
+        <tr v-for="nv in filteredNhanViens" :key="nv.id">
           <td>{{ nv.id }}</td>
           <td>{{ nv.name }}</td>
           <td>{{ nv.email }}</td>
@@ -211,25 +181,6 @@ const prevPage = () => {
         </tr>
       </tbody>
     </table>
-
-    <!-- Phân trang -->
-    <div class="d-flex justify-content-between">
-      <button
-        class="btn btn-secondary"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-      >
-        Trước
-      </button>
-      <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        class="btn btn-secondary"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        Sau
-      </button>
-    </div>
   </div>
 </template>
 
